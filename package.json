@@ -1,0 +1,14 @@
+{
+  "name": "api-pablo",
+  "version": "1.0.0",
+  "description": "backend da atividade avaliativa",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "fastify": "^4.24.3",
+    "sqlite3": "^5.1.6"
+  },
+  "scripts": {
+    "start": "node index.js"
+  }
+}
