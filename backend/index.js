@@ -24,7 +24,6 @@ fastify.get("/users", function handler(request, reply) {
 		if (fail) throw fail;
 
 		for (let i = 0; i < rows.length; i++) {
-			console.log("push");
 			users.push({
 				id: rows[i].id,
 				username: rows[i].name,
@@ -60,10 +59,36 @@ fastify.post("/users/new", async function handler(request, reply) {
 });
 
 // Apagar usuário
-fastify.delete("/users/:id", async function handler(request, reply) {});
+fastify.delete("/users/:id", async function handler(request, reply) {
+	let id = request.params.id;
+
+	try {
+		const stmt = db.prepare("DELETE FROM users WHERE id=?");
+		stmt.run(id);
+	} catch (err) {
+		reply.code(500).send({ status: "failed" });
+	}
+
+	reply.code(200).send({ status: "success" });
+
+	return reply;
+});
 
 // Editar usuário
-fastify.put("/users/:id", function handler(request, reply) {});
+fastify.put("/users/:id", function handler(request, reply) {
+	[username, id] = [request.body.username, request.params.id];
+
+	try {
+		const stmt = db.prepare("UPDATE users SET name=? WHERE id=?");
+		stmt.run(username, id);
+	} catch (err) {
+		reply.code(500).send({ status: "failed" });
+	}
+
+	reply.code(200).send({ status: "success" });
+
+	return reply;
+});
 
 try {
 	fastify.listen({ port: 3000 });
